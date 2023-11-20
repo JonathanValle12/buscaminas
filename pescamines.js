@@ -291,20 +291,44 @@ function crearTabla(){
     let recoger = JSON.parse(localStorage.getItem("lista"));
     guardarDatos = recoger; // Guardar los datos a recoger en la variable global para no sobrescribir ningun dato
     // Recorrer los datos guardados en la variable global
-    for(let i = 0; i < guardarDatos.length; i++){
-        let row = tbody.insertRow(i); //Insertamos filas
+
+    guardarDatos.forEach((elemento, index) => {
+        let row = tbody.insertRow(index); //Insertamos filas
         let userCell = row.insertCell(0); // En la columna 0 ("NOM")
         let puntuarCell = row.insertCell(1); // En la columna 1 ("Puntuacion")
         let tiempoCell = row.insertCell(2); // En la columna 2 ("Tiempo")
-        
-        userCell.innerHTML = guardarDatos[i].user; // Añademe el usuario en la columna 0
-        puntuarCell.innerHTML = guardarDatos[i].puntuar; // Añademe la puntuacion en la columna 1
-        tiempoCell.innerHTML = guardarDatos[i].tiempo; // Añade el tiempo en la columna 2
+        let buttonCell = row.insertCell(3); // En la columna 3 (" Boton de eliminar")
+        userCell.innerHTML = elemento.user; // Añademe el usuario en la columna 0
+        puntuarCell.innerHTML = elemento.puntuar; // Añademe la puntuacion en la columna 1
+        tiempoCell.innerHTML = elemento.tiempo; // Añade el tiempo en la columna 2
+
+        buttonCell.innerHTML = `<button onclick='eliminarPuntuacion(${index})'>Eliminar</button>`;
+        console.log(buttonCell);
         tbody.appendChild(row); // Añadir la fila en el tbody
-    }
+    });
+
     // Añadir el tbody dentro de la tabla y dentro del body
     taula.appendChild(tbody);
     body.appendChild(taula);
+}
+
+function eliminarPuntuacion(index) {
+
+    // Obtener los datos de la lista del localStorage, si no tenemos nada sera un array vacio
+    let recogerDatos = JSON.parse(localStorage.getItem("lista")) || [];
+
+    // Verificar que el indice no se salga del rango
+    if (index >= 0 && index < recogerDatos.length) {
+
+        // Elimina la puntuación en el índice dado
+        recogerDatos.splice(index, 1);
+        // Actualiza el almacenamiento local con la lista de puntuaciónes
+        localStorage.setItem("lista", JSON.stringify(recogerDatos));
+        // Volver a renderizar la Tabla
+        crearTabla();
+    }else {
+        console.log("Indice fuera de rango");
+    }
 }
 // Comprobar de que exista nuestra lista de datos en el LocalStorage
 // Si existe creame la tabla, si no existe no me la crees ya que daria error (Esto es para que se pueda visualizar la tabla y que no se piedan los datos)
