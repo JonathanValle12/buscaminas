@@ -15,7 +15,7 @@ let registrar = document.getElementById("registrar");
 let puntuarG = document.getElementById("punts"); // Mostrar los datos en la tabla de puntuaje
 let punts = 0; // Incremetar +10 por cada casilla destapada
 // Variables donde añadiremos el usuario y la puntuacion en la tabla 
-let tbody = document.querySelector("#datos tbody"); 
+let tbody = document.querySelector("#datos tbody");
 let taula = document.getElementById("datos");
 
 // Contador de Tiempo de Juego
@@ -28,28 +28,28 @@ let running = false; // Comprobar que no hace mas click para no buguear el tiemp
 
 
 // FUNCION PARA INCREMENTAR EL TIEMPO
-function tick(){
+function tick() {
     running = true;
     sec++;
-    if(sec >= 60){
+    if (sec >= 60) {
         sec = 0;
         min++;
-        if(min >= 60){
+        if (min >= 60) {
             min = 0;
             hrs++;
         }
     }
 }
 // FUNCION PARA AGREGAR EL CONTADOR DEL TIEMPO
-function add(){
+function add() {
     tick();
     h2.textContent = (hrs > 9 ? hrs : "0" + hrs)
-            + ":" + (min > 9 ? min : "0" + min)
-            + ":" + (sec > 9 ? sec : "0" + sec)
+        + ":" + (min > 9 ? min : "0" + min)
+        + ":" + (sec > 9 ? sec : "0" + sec)
 }
 
 // FUNCION PARA AGREGAR LA TABLA
-function inicialitzaJoc(inputX, inputY){
+function inicialitzaJoc(inputX, inputY) {
     const contenedorJuego = document.querySelector('.contenedor-juego');
 
     if (contenedorJuego.classList.contains('hidden')) {
@@ -57,7 +57,7 @@ function inicialitzaJoc(inputX, inputY){
         contenedorJuego.classList.remove('hidden');
     }
     // En caso de que haya 1 tabla, eliminamelo y creame la siguiente para no duplicarse
-    if(document.getElementsByTagName("table").length != 0){
+    if (document.getElementsByTagName("table").length != 0) {
         document.getElementsByTagName("table")[0].remove();
         finPartida = false;
         resultado.innerHTML = '';
@@ -70,15 +70,15 @@ function inicialitzaJoc(inputX, inputY){
     let tbody = document.createElement("tbody");
 
     // Empezar a crear la tabla con las dimensiones que pasare
-    for(var x = 0; x < inputX; x++){
+    for (var x = 0; x < inputX; x++) {
         // Crear el elemento tr 
         let tr = document.createElement("tr");
-        for(var y = 0; y < inputY; y++){
+        for (var y = 0; y < inputY; y++) {
             // Crear el elemento td
             let td = document.createElement("td");
             // Asignamos un id al td y le damos como valor las coordenada x e y de la posición 
             // donde este la celda 
-            td.setAttribute("id","x" + x + "_y" + y);
+            td.setAttribute("id", "x" + x + "_y" + y);
             td.dataset.fila = x;
             td.dataset.columna = y;
             td.width = 40;
@@ -88,9 +88,9 @@ function inicialitzaJoc(inputX, inputY){
             // Unir el elemento td dentro de los elementos tr que se creen
             tr.appendChild(td);
             // Añadimos función al hacer click
-            td.addEventListener("click",destapar); //evento con el botón izquierdo del raton
+            td.addEventListener("click", destapar); //evento con el botón izquierdo del raton
             // Añadimos función al hacer click derecho
-            td.oncontextmenu = function(event) {
+            td.oncontextmenu = function (event) {
                 event.preventDefault();
                 anadirBandera(td, rellenarMinas);
                 actualizaNumBanderas(rellenarMinas);
@@ -114,19 +114,19 @@ function inicialitzaJoc(inputX, inputY){
 };
 // Funcion para resetear el contador de las banderas y las que le faltan
 // Reutilizable tanto al limpiar el tablero como al generar las bombas mortales nuevamente
-function resetCount(rellenarMinas){
+function resetCount(rellenarMinas) {
     numBanderas = 0;
     contadorBanderas.textContent = 0;
     contadorBanderasRestantes.textContent = rellenarMinas;
 }
-function resetcontador(){
+function resetcontador() {
     sec = 0;
     min = 0;
     hrs = 0;
     add();
 }
 // Funcion para contar las minas de alrededor
-function contarMinasAlrededorCasilla(fila,columna){
+function contarMinasAlrededorCasilla(fila, columna) {
     let numeroMinasAlrededor = 0;
     // Primero se crea una matriz de arras de 0
     // Recorremos las minas que hay
@@ -142,16 +142,16 @@ function contarMinasAlrededorCasilla(fila,columna){
         minesVoltant.push(fila);
     }
     //de la fila anterior a la posterior
-    for (let zFila = fila-1; zFila <= fila+1; zFila++){
+    for (let zFila = fila - 1; zFila <= fila + 1; zFila++) {
 
         //de la columna anterior a la posterior
-        for (let zColumna = columna-1; zColumna <= columna+1; zColumna++){
+        for (let zColumna = columna - 1; zColumna <= columna + 1; zColumna++) {
 
             //si la casilla cae dentro del tablero
-            if (zFila>-1 && zFila<inputX && zColumna>-1 && zColumna<inputY){
+            if (zFila > -1 && zFila < inputX && zColumna > -1 && zColumna < inputY) {
 
                 //miramos si en esa posición hay una mina
-                if (mines[zFila][zColumna]==1){
+                if (mines[zFila][zColumna] == 1) {
 
                     //y sumamos 1 al numero de minas que hay alrededor de esa casilla
                     numeroMinasAlrededor++;
@@ -165,13 +165,13 @@ function contarMinasAlrededorCasilla(fila,columna){
 }
 
 // FUNCION PARA CONTAR LAS MINAS
-function contarMinas(){
+function contarMinas() {
     //contamos cuantas minas hay alrededor de cada casilla
-    for (let fila=0; fila<inputX; fila++){
-        for (let columna=0; columna<inputY; columna++){
+    for (let fila = 0; fila < inputX; fila++) {
+        for (let columna = 0; columna < inputY; columna++) {
             //solo contamos si es distinto de 1
-            if (mines[fila][columna]!=1){
-                contarMinasAlrededorCasilla(fila,columna);
+            if (mines[fila][columna] != 1) {
+                contarMinasAlrededorCasilla(fila, columna);
             }
         }
     }
@@ -184,55 +184,55 @@ function dobleClick(td) {
     destapar(td);
 }
 // FUNCION PARA DESTAPAR LA CASILLA CLICKEADA
-function destapar(miEvento){
+function destapar(miEvento) {
     let td = miEvento.currentTarget;
-    let fila = parseInt(td.dataset.fila,10);
-    let columna = parseInt(td.dataset.columna,10);
+    let fila = parseInt(td.dataset.fila, 10);
+    let columna = parseInt(td.dataset.columna, 10);
     // Se llama a la funcion para destapar la casilla pasandole como entrada la fila y la columna que es la casilla clickeada
-    destaparCasilla(fila,columna);
+    destaparCasilla(fila, columna);
 
 }
 // FUNCION PARA DESTAPAR LA CASILLA DE ALREDEDOR
-function destaparCasilla(fila, columna){
-    if(finPartida) return;
+function destaparCasilla(fila, columna) {
+    if (finPartida) return;
     //si la casilla esta dentro del tablero
     if (fila > -1 && fila < inputX &&
-        columna >-1 && columna < inputY){
+        columna > -1 && columna < inputY) {
 
         //obtenermos la casilla con la fila y columna
         let td = document.querySelector("#x" + fila + "_y" + columna);
         //si la casilla no esta destapada
-        if(!td.classList.contains("destapado")){
+        if (!td.classList.contains("destapado")) {
             // Incrementamos 10 por cada casilla destapada
             punts += 10;
             puntuarG.innerText = punts; // Y actualizamos la puntuación
             // En caso de que no haya ninguna bandera
-            if(!td.classList.contains("🚩")){
+            if (!td.classList.contains("🚩")) {
 
                 td.classList.add("destapado");
-                 //ponemos en la casilla el número de minas que tiene alrededor
-                 td.innerHTML = minesVoltant[fila][columna];
+                //ponemos en la casilla el número de minas que tiene alrededor
+                td.innerHTML = minesVoltant[fila][columna];
 
-                 //ponemos el estilo del numero de minas que tiene alrededor (cada uno es de un color)
-                 td.classList.add("y" + minesVoltant[fila][columna])
-                 // Si no hay minas
-                 if(mines[fila][columna] !== 1){
+                //ponemos el estilo del numero de minas que tiene alrededor (cada uno es de un color)
+                td.classList.add("y" + minesVoltant[fila][columna])
+                // Si no hay minas
+                if (mines[fila][columna] !== 1) {
                     // y tiene 0 minas alrededor, destapamos las casillas contiguas
-                    if (minesVoltant[fila][columna] == 0){
-                        destaparCasilla(fila-1,columna-1);
-                        destaparCasilla(fila-1,columna);
-                        destaparCasilla(fila-1,columna+1);
-                        destaparCasilla(fila,columna-1);
-                        destaparCasilla(fila,columna+1);
-                        destaparCasilla(fila+1,columna-1);
-                        destaparCasilla(fila+1,columna);
+                    if (minesVoltant[fila][columna] == 0) {
+                        destaparCasilla(fila - 1, columna - 1);
+                        destaparCasilla(fila - 1, columna);
+                        destaparCasilla(fila - 1, columna + 1);
+                        destaparCasilla(fila, columna - 1);
+                        destaparCasilla(fila, columna + 1);
+                        destaparCasilla(fila + 1, columna - 1);
+                        destaparCasilla(fila + 1, columna);
 
                         // En todo caso si no queremos que se ponga 0 en las casillas que no hay minas,
                         // Ponemos una cadena vacia de tal forma que no se imprimira ningun numero.
                         //td.innerHTML  = "";
                     }
-                 // En todo caso de que haya minas
-                 }else if(mines[fila][columna] == 1){
+                    // En todo caso de que haya minas
+                } else if (mines[fila][columna] == 1) {
                     td.innerText = '💣';
                     td.classList.add("destapado");
                     td.style.backgroundColor = "red"; // Aplicar un fondo a la celda
@@ -245,45 +245,83 @@ function destaparCasilla(fila, columna){
                     t = clearInterval(t);
                     // Restamos 10 al explotar una bomba ya que no queremos que se incremente,
                     // unicamente las casillas a contar
-                    let puntuacion = punts-10;
+                    let puntuacion = punts - 10;
                     puntuarG.innerText = puntuacion;
                     // Formato del tiempo en hrs, min y sec para mostrar en la tabla y en el localStorage
                     let time = hrs + "h " + min + "m " + sec + "s";
                     // Preguntamos nombres de usuarios
-                    let usuario = prompt("Perdistes, Ingrese un usuario a guardar: ");
-                    datosGlobales(usuario, puntuacion, time); // Pasamos como parametros los 3 valores a guardar
-                 }
+                    //let usuario = prompt("Perdistes, Ingrese un usuario a guardar: ");
+                    // Llama a mostrarModal en caso de derrota
+                    mostrarModal("Lo siento, has perdido, Ingrese un usuario a guardar:");
+                    let enviarDatos = document.getElementById("submitBtn");
+
+                    enviarDatos.addEventListener("click", () => {
+                        let usuario = document.getElementById("username").value;
+                        datosGlobales(usuario, puntuacion, time); // Pasamos como parametros los 3 valores a guardar
+                        let resultadoJuego = document.getElementById("resultado-juego");
+                        resultadoJuego.style.opacity = 1;
+                    });
+                }
             }
         }
     }
 }
 let guardarDatos = []; // => Guardar el usuario y la puntuacion en la tabla
+
 // FUNCION PARA ALMACENAR LOS DATOS EN LA MATRIX GUARDARDATOS
-function datosGlobales(usuario, puntuacion, time){
+function datosGlobales(usuario, puntuacion, time) {
+
+    let datos = JSON.parse(localStorage.getItem("lista"));
+
+    do  {
+        mostrarModal("Necesitas ingresar un usuario valido: ");
+    }while(usuario == "");
+
+
     
-    // En caso de no escribir nada, preguntarte tu usuario de nuevo
-    while(usuario == null || !usuario.trim()){
-        usuario = prompt("Necesitas ingresar un usuario valido: ");
+    if (datos && datos.some(elemento => elemento.user.trim() === usuario.trim())) {
+        mostrarModal("El nombre de usuario ya existe. Por favor, ingrese un nombre diferente:");
+    } else {
+        // Guardar los datos a un formato JSON
+        let newDatos = {
+            user: usuario,
+            puntuar: puntuacion,
+            tiempo: time
+        };
+        guardarDatos.push(newDatos); // Hacer un push de los datos a la variable Global
+        localStorage.setItem("lista", JSON.stringify(guardarDatos));
+        crearTabla();
+        window.scroll({
+            top: 100000000 // Ajusta según sea necesario
+        });
+
+        ocultarModal();
     }
-    // Guardar los datos a un formato JSON
-    let newDatos = {
-        user: usuario,
-        puntuar: puntuacion,
-        tiempo: time
-    };
-    console.log(newDatos);
-    guardarDatos.push(newDatos); // Hacer un push de los datos a la variable Global
-    localStorage.setItem("lista", JSON.stringify(guardarDatos));
-    crearTabla(); // Al ingresar el usuario, se crea la tabla
-    // Al perder, se hace un scroll hacia abajo para ver el resultado de la partida
-    // de una forma mas rapida ya que la tabla es grande y puede pasar
-    // que no se muestre el resultado de primeras y que tengas que hacer scroll tu 
-    window.scroll({
-        top: 100000000 // XDD
-    });
+
 }
+
+function mostrarModal(mensaje) {
+    const modal = document.getElementById("myModal");
+    const modalMessage = document.getElementById("modalMessage");
+
+    modalMessage.textContent = mensaje;
+
+    modal.style.display = "block";
+}
+
+function ocultarModal() {
+    const modal = document.getElementById("myModal");
+
+    modal.style.display = "none";
+}
+
+function closeModal() {
+    const modal = document.getElementById("myModal");
+    modal.style.display = "none";
+}
+
 // CREACION DE LA TABLA CON LOS DATOS A REGISTRAR
-function crearTabla(){
+function crearTabla() {
     let body = document.getElementsByTagName("body")[0]; // Añadir la tabla en el body
     // Cuando se cree la tabla, muestra el texto
     registrar.style.display = "block";
@@ -303,7 +341,7 @@ function crearTabla(){
         tiempoCell.innerHTML = elemento.tiempo; // Añade el tiempo en la columna 2
 
         buttonCell.innerHTML = `<button onclick='eliminarPuntuacion(${index})'>Eliminar</button>`;
-        console.log(buttonCell);
+
         tbody.appendChild(row); // Añadir la fila en el tbody
     });
 
@@ -311,6 +349,7 @@ function crearTabla(){
     taula.appendChild(tbody);
     body.appendChild(taula);
 }
+
 
 function eliminarPuntuacion(index) {
 
@@ -326,26 +365,26 @@ function eliminarPuntuacion(index) {
         localStorage.setItem("lista", JSON.stringify(recogerDatos));
         // Volver a renderizar la Tabla
         crearTabla();
-    }else {
+    } else {
         console.log("Indice fuera de rango");
     }
 }
 // Comprobar de que exista nuestra lista de datos en el LocalStorage
 // Si existe creame la tabla, si no existe no me la crees ya que daria error (Esto es para que se pueda visualizar la tabla y que no se piedan los datos)
-if(JSON.parse(localStorage.getItem("lista"))){
+if (JSON.parse(localStorage.getItem("lista"))) {
     crearTabla();
 }
 
 // FUNCION PARA CREAR LA TABLA CON DIFERENTES MEDIDAS
-function midaTaula(){
+function midaTaula() {
     let midataula = document.getElementById("midataula").value;
     // Si hemos perdido, resetea el contador y comenzar de nuevo
-    if(finPartida){
+    if (finPartida) {
         resetcontador();
         t = setInterval(add, 1000);
     }
     // Hacer diferentes casos
-    switch(midataula){
+    switch (midataula) {
         // En el caso numero 1
         case '1':
             // Inicializame las minas y así en todos los casos y un break para parar el programa y que no se salga
@@ -383,7 +422,7 @@ function midaTaula(){
             // Si no se escoge ninguna de esas opciones, muestra una alerta
             alert("No se ha escogido ninguna opcion");
     }
-    if(!running){
+    if (!running) {
         t = setInterval(add, 1000);
     }
     // Llamar a las funciones ya definidas para que funcione la tabla
@@ -399,7 +438,7 @@ function midaTaula(){
 
 
 // FUNCION PARA BORRAR EL TABLERO
-function del(){
+function del() {
     // Reseteamos los puntos
     punts = 0;
     resultado.style.display = "none";
@@ -411,7 +450,7 @@ function del(){
         resultado.innerHTML = '';
         resultado.classList.remove("perder");
     }
-    if(document.getElementsByTagName("table").length != 0){
+    if (document.getElementsByTagName("table").length != 0) {
         document.getElementsByTagName("table")[0].remove();
         resetCount(rellenarMinas);
     }
@@ -421,15 +460,15 @@ function del(){
 
 }
 // FUNCION PARA PINTAR LAS MINAS EN EL TABLERO
-function pintarTablero(mines){
+function pintarTablero(mines) {
     let rows = document.getElementsByTagName("tbody")[0].children;
     let matrix = [];
     // Recorrer toda la tabla para pintarla
-    for(var i = 0; i < rows.length; i++){
+    for (var i = 0; i < rows.length; i++) {
         matrix.push(rows[i].children);
-        for(var j = 0; j < matrix[i].length; j++){ 
+        for (var j = 0; j < matrix[i].length; j++) {
             // Si en minas hay 1        
-            if(mines[i][j] == 1){
+            if (mines[i][j] == 1) {
                 // pintame la matriz de rojo
                 matrix[i][j].style.backgroundColor = "red";
             }
@@ -448,15 +487,15 @@ function anadirBandera(td, rellenarMinas) {
             td.innerHTML = '🚩'; // Se coloca la bandera
             td.style.backgroundColor = 'green'; // El fondo de la casilla donde se ha colocado la bandera
             numBanderas++; // Incrementamos banderas
-        // En caso de que haya una bandera 
-        }else if(td.classList.contains('bandera')) {
+            // En caso de que haya una bandera 
+        } else if (td.classList.contains('bandera')) {
             td.classList.remove('bandera'); // Eliminamos la clase bandera
             td.innerHTML = ''; // Quitamos la bandera
             td.style.backgroundColor = ''; // Tambien el fondo
             numBanderas--; // Y restamos las banderas
         }
         // En caso de que sea igual a las minas colocadas
-        if(numBanderas == rellenarMinas){
+        if (numBanderas == rellenarMinas) {
             finPartida = true; // Terminar Juego
             clearInterval(t); // Parame el tiempo
             let puntuacion = punts; //Guardamos los puntos en puntuacion
@@ -468,7 +507,9 @@ function anadirBandera(td, rellenarMinas) {
             resultado.classList.add("ganar");
             let usuario = prompt("Felicidades has ganado, Ingrese un usuario a guardar: ");
             // Pasamos como parametro el usuario, la puntuacion y el tiempo a guardar            
-            datosGlobales(usuario, puntuacion,time);
+            datosGlobales(usuario, puntuacion, time);
+            let resultadoJuego = document.getElementById("resultado-juego");
+            resultadoJuego.style.opacity = 1;
         }
     }
 }
@@ -480,14 +521,14 @@ function actualizaNumBanderas(rellenarMinas) {
 }
 
 // FUNCION PARA GENERAR UNA MATRIZ DE 0 1 DE FORMA ALEATORIA
-function inicialitzaMines(nMines, midaX, midaY){
+function inicialitzaMines(nMines, midaX, midaY) {
     let mines = [];
     let mines2 = nMines;
     // Crear Matriz de midaX midaY llenas de 0
-    for(var i = 0; i < midaX; i++){
+    for (var i = 0; i < midaX; i++) {
         // Crear matriz nueva
         let nueva = [];
-        for (var j = 0; j < midaY; j++){
+        for (var j = 0; j < midaY; j++) {
             // Llenar la matriz nueva de midaX midaY de 0
             nueva.push(0);
         }
@@ -495,13 +536,13 @@ function inicialitzaMines(nMines, midaX, midaY){
         // de midaX y midaY
         mines.push(nueva);
     }
-     // En caso de que haya minas
-    while (mines2!=0){
+    // En caso de que haya minas
+    while (mines2 != 0) {
         // Generar numeros aleatorios
-        let a = parseInt(Math.random()*midaX);
-        let b = parseInt(Math.random()*midaY);
+        let a = parseInt(Math.random() * midaX);
+        let b = parseInt(Math.random() * midaY);
         // En caso de que no haya minas (1)
-        if (mines[a][b]!=1){
+        if (mines[a][b] != 1) {
             // Pon 1 a las minas
             mines[a][b] = 1;
             mines2--;
@@ -517,33 +558,33 @@ function coordCelda() {
     let celda = document.getElementById("taula");
     // Hacemos un evento de tipo click con una funcion callback donde le pasamos un 
     // parametro "event" y ejecutaremos esa funcion una vez que clickemos en una celda
-    celda.addEventListener("click", function(event){
+    celda.addEventListener("click", function (event) {
         // Obtenemos el id de la celda y en caso de que sea roja se cumplira la condicion
-        if(event.target.style.backgroundColor == "red"){
+        if (event.target.style.backgroundColor == "red") {
             // Obtenemos el id de la celda
             console.log("La fila y la columna tiene como posición " + event.target.id + "\n\ny es una bomba mortal");
-        // En caso de que no sea roja
-        }else{
+            // En caso de que no sea roja
+        } else {
             console.log("La fila y la columna tiene como posición " + event.target.id + "\n\ny no es una bomba mortal");
         }
     });
 }
 
 // INICIAR PROGRAMA PESCAMINES
-function inicialitza(){
+function inicialitza() {
     registrar.style.display = "none";
     resultado.style.display = "none";
-    if(!running){
+    if (!running) {
         t = setInterval(add, 1000);
     }
     // Controlar cuando se pierde o gana y resetar el tiempo y comenzar de nuevo
-    if(finPartida){
+    if (finPartida) {
         resetcontador();
         t = setInterval(add, 1000);
     }
     // INICIALIZAMOS LAS MINAS y LLAMAMOS A LAS FUNCIONES YA CREADAS PARA EMPEZAR EL JUEGO
-    inputX= document.getElementById("inputX").valueAsNumber;
-    inputY= document.getElementById("inputY").valueAsNumber; 
+    inputX = document.getElementById("inputX").valueAsNumber;
+    inputY = document.getElementById("inputY").valueAsNumber;
     rellenarMinas = document.getElementById("minasC").valueAsNumber;
     mines = inicialitzaMines(rellenarMinas, inputX, inputY);
     inicialitzaJoc(inputX, inputY);

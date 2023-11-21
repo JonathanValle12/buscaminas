@@ -45,8 +45,8 @@
         <h3>Banderas colocadas: <span id="num-banderas"></span> ( faltan <span id="banderas-restantes"></span> )</h3>
     </div>
     <div id="tablero"></div>
-    <div class="resultado-juego"></div>
-    <p id="registrar" style="width:25%; margin: auto; font-weight: bold; margin: 20px auto;">Datos Registrados: </p>
+    <div class="resultado-juego" id="resultado-juego"></div>
+    <p id="registrar" class="registrar_datos">Datos Registrados: </p>
     <table id="datos" style="margin: 20px auto;">
         <thead>
             <tr>
@@ -60,6 +60,16 @@
             
         </tbody>
     </table>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalMessage"></p>
+            <label for="username" id="textUser"></label>
+            <input type="text" id="username" required>
+            <button id="submitBtn">Aceptar</button>
+        </div>
+    </div>
 
     <script src="pescamines.js"></script>
 </body>
