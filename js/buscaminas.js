@@ -596,3 +596,8 @@ function inicialitza() {
     punts = 0;
     puntuarG.innerText = punts;
 }
+
+document.getElementById("inicialitza").addEventListener("click", inicialitza);
+document.getElementById("deleteTablero").addEventListener("click", del);
+document.getElementById("midataula").addEventListener("change", midaTaula);
+document.getElementById("midataula").addEventListener("click", closeModal);

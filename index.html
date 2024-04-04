@@ -27,9 +27,9 @@
             </div>
         </form> 
         <div class="botones">
-            <button onclick="inicialitza()">Bombas Mortales</button>
-            <button onclick="del()">Limpiar Tablero</button>
-            <select id="midataula" onchange="midaTaula()">
+            <button id="inicialitza">Bombas Mortales</button>
+            <button id="deleteTablero">Limpiar Tablero</button>
+            <select id="midataula">
                 <option value="none" selected disabled hidden>Selecione Tablero</option>
                 <option value="1">9x9, 10mines</option>
                 <option value="2">9x9, 35mines</option>
@@ -63,7 +63,7 @@
 
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
+            <span class="close" id="close">&times;</span>
             <p id="modalMessage"></p>
             <label for="username" id="textUser"></label>
             <input type="text" id="username" required>
@@ -71,6 +71,6 @@
         </div>
     </div>
 
-    <script src="pescamines.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
