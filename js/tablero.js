@@ -1,4 +1,4 @@
-import Game2 from "./game2.js";
+import Game2 from "./game.js";
 import Globals from "./globals.js";
 
 class Tablero {
@@ -9,20 +9,14 @@ class Tablero {
 
     // FUNCION PARA AGREGAR LA TABLA
     inicialitzaJoc(inputX, inputY) {
-        const contenedorJuego = document.querySelector('.contenedor-juego');
+        let tablaExistente = document.querySelector('#tablero table');
 
-        if (contenedorJuego.classList.contains('hidden')) {
-            // Si tiene la clase 'hidden' es porque no hay ningún juego
-            contenedorJuego.classList.remove('hidden');
-        }
-        // En caso de que haya 1 tabla, eliminamelo y creame la siguiente para no duplicarse
-        if (document.getElementsByTagName("table").length != 0) {
-            document.getElementsByTagName("table")[0].remove();
+        if (tablaExistente) {
+            tablaExistente.remove();
             Globals.finPartida = false;
-            Globals.resultado.innerHTML = '';
-            Globals.resultado.classList.remove("perder");
             Game2.resetCount();
         }
+
         // Definir estructura table y tbody y empezar tabla desde el body
         let tablero = document.getElementById("tablero");
         const tabla = document.createElement("table");
@@ -75,62 +69,43 @@ class Tablero {
     // FUNCION PARA CREAR LA TABLA CON DIFERENTES MEDIDAS
     midaTaula() {
         let midataula = document.getElementById("midataula").value;
-        // Si hemos perdido, resetea el contador y comenzar de nuevo
-        if (Globals.finPartida) {
-            Game2.resetcontador();
-            Globals.t = setInterval(() => Partida.add(), 1000);
-        }
+
+        const inputX = document.getElementById('inputX');
+        const inputY = document.getElementById('inputY');
+        const inputMines = document.getElementById('minasC');
+
         // Hacer diferentes casos
         switch (midataula) {
             // En el caso numero 1
             case '1':
-                // Inicializame las minas y así en todos los casos y un break para parar el programa y que no se salga
-                // al siguiente caso
-                Globals.rellenarMinas = 10;
-                Globals.inputX = 9;
-                Globals.inputY = 9;
-                Globals.mines = Game2.inicialitzaMines(Globals.rellenarMinas, Globals.inputX, Globals.inputY);
+                inputX.value = 9;
+                inputY.value = 9;
+                inputMines.value = 10;
                 break;
             case '2':
-                Globals.rellenarMinas = 35;
-                Globals.inputX = 9;
-                Globals.inputY = 9;
-                Globals.mines = Game2.inicialitzaMines(Globals.rellenarMinas, Globals.inputX, Globals.inputY);
+                inputX.value = 9;
+                inputY.value = 9;
+                inputMines.value = 35;
                 break;
             case '3':
-                Globals.rellenarMinas = 99;
-                Globals.inputX = 16;
-                Globals.inputY = 16;
-                Globals.mines = Game2.inicialitzaMines(Globals.rellenarMinas, Globals.inputX, Globals.inputY);
+                inputX.value = 16;
+                inputY.value = 16;
+                inputMines.value = 99;
                 break;
             case '4':
-                Globals.rellenarMinas = 99;
-                Globals.inputX = 30;
-                Globals.inputY = 16;
-                Globals.mines = Game2.inicialitzaMines(Globals.rellenarMinas, Globals.inputX, Globals.inputY);
+                inputX.value = 30;
+                inputY.value = 16;
+                inputMines.value = 99;
                 break;
             case '5':
-                Globals.rellenarMinas = 170;
-                Globals.inputX = 30;
-                Globals.inputY = 16;
-                Globals.mines = Game2.inicialitzaMines(170, Globals.inputX, Globals.inputY);
+                inputX.value = 30;
+                inputY.value = 16;
+                inputMines.value = 170;
                 break;
             default:
                 // Si no se escoge ninguna de esas opciones, muestra una alerta
                 alert("No se ha escogido ninguna opcion");
         }
-        if (!Globals.running) {
-            Globals.t = setInterval(() => Game2.add(), 1000);
-        }
-        // Llamar a las funciones ya definidas para que funcione la tabla
-        Game2.inicialitzaJoc(Globals.inputX, Globals.inputY)
-        //pintarTablero(mines); // Para visualizar de una forma mejor las minas
-        Game2.coordCelda();
-        Game2.contarMinas();
-        Game2.actualizaNumBanderas(Globals.rellenarMinas);
-        Globals.punts = 0;
-        Globals.puntuarG.innerText = "Puntuación: " + Globals.punts;
-        Globals.registrar.style.display = "none";
     }
 
     // FUNCION PARA PINTAR LAS MINAS EN EL TABLERO

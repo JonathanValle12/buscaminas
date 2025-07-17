@@ -1,76 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <h2><time>00:00:00</time></h2>
-    <h1>Tablero de Minas</h1>
-    <!--Dimensiones -->
-    <div class="container">
-        <form action="">
-            <div>
-                <label for="">Dimension X: </label>
-                <input type="number" id="inputX" placeholder="Dimension x">
-            </div>
-            <div>
-                <label for="">Dimension Y: </label>
-                <input type="number" id="inputY" placeholder="Dimension Y">
-            </div>
-            <div>
-                <label for="">Bombas Mortales: </label>
-                <input type="number" id="minasC" placeholder="Minas">
-            </div>
-        </form> 
-        <div class="botones">
-            <button id="inicialitza">Bombas Mortales</button>
-            <button id="deleteTablero">Limpiar Tablero</button>
-            <select id="midataula">
-                <option value="none" selected disabled hidden>Selecione Tablero</option>
-                <option value="1">9x9, 10mines</option>
-                <option value="2">9x9, 35mines</option>
-                <option value="3">16x16, 99mines</option>
-                <option value="4">30x16, 99mines</option>
-                <option value="5">30x16, 170mines</option>
-            </select>
-        </div>
-    </div>
-    <br>
-    <div id="puntuarG" class="puntuarG">Puntuación: <span id="punts">0</span></div>
-    <div class="contenedor-juego hidden">
-        <h3>Banderas colocadas: <span id="num-banderas"></span> ( faltan <span id="banderas-restantes"></span> )</h3>
-    </div>
-    <div id="tablero"></div>
-    <div class="resultado-juego" id="resultado-juego"></div>
-    <p id="registrar" class="registrar_datos">Datos Registrados: </p>
-    <table id="datos" style="margin: 20px auto;">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Puntuación</th>
-                <th>Tiempo</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-        </tbody>
-    </table>
 
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="close">&times;</span>
-            <p id="modalMessage"></p>
-            <label for="username" id="textUser"></label>
-            <input type="text" id="username" required>
-            <button id="submitBtn">Aceptar</button>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="contenedor-title">
+                <i class="fa-solid fa-bomb"></i>
+                <div class="title">
+                    <h1>Campo de Minas</h1>
+                    <p>El Clásico Desafio</p>
+                </div>
+                <i class="fa-solid fa-bullseye"></i>
+            </div>
+        </header>
+
+        <main class="main-container">
+
+            <!-- Timer / Cronómetro -->
+            <section class="timer-section">
+                <span class="timer-icon">⏱</span>
+                <span class="timer" id="timer">00:00:00</span>
+
+            </section>
+
+            <!-- Panel de Control -->
+            <section class="control-panel">
+                <div class="title">
+                    <i class="fas fa-cog"></i>
+                    <h2>Panel de Control</h2>
+                </div>
+                <form class="control-form" action="">
+                    <div class="input-group">
+                        <label for="">Ancho</label>
+                        <input type="number" id="inputX" value="9" />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="">Alto</label>
+                        <input type="number" id="inputY" value="9" />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="">Minas</label>
+                        <input type="number" id="minasC" value="10" />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="preset">Presets</label>
+                        <select id="midataula">
+                            <option value="none" selected disabled hidden>Selecione</option>
+                            <option value="1">9x9, 10mines</option>
+                            <option value="2">9x9, 35mines</option>
+                            <option value="3">16x16, 99mines</option>
+                            <option value="4">30x16, 99mines</option>
+                            <option value="5">30x16, 170mines</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="start-button" id="inicialitza"><i
+                            class="fas fa-bomb"></i>Iniciar</button>
+                    <button type="reset" class="reset-button" id="deleteTablero" title="Reiniciar"
+                        aria-label="Reiniciar">↻</button>
+                </form>
+            </section>
+
+            <!-- Indicadores de estado del juego -->
+            <section class="status-bar hidden">
+                <div class="score-box status">
+                    <div class="contenedor-puntuacion">
+                        <i class="fa-solid fa-trophy yellow"></i>
+                        <div class="puntuarG">
+                            <h3>Puntuación</h3>
+                            <span id="punts">0</span>
+                        </div>
+                    </div>
+                    <span class="status-tag yellow">Activo</span>
+                </div>
+
+                <div class="flags-box status">
+                    <div class="contenedor-puntuacion">
+                        <i class="fa-solid fa-flag blue"></i>
+                        <div class="flags" id="flags">
+                            <h3>Banderas</h3>
+                            <span class="flags-count" id="num-banderas"></span> / <span id="total-banderas">10</span>
+                        </div>
+                    </div>
+                    <span class="flags-remaining blue"><span id="banderas-restantes"></span> REST</span>
+                </div>
+
+            </section>
+
+            <!-- Tablero del juego -->
+            <section class="board-section hidden">
+                <div class="capa-01">
+                    <div class="capa-02">
+                        <div class="game-board" id="tablero"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estado de Juego -->
+            <section class="game-status">
+                <i class="fas fa-bomb"></i>
+
+                <h2>Listo para jugar</h2>
+                <p>Configura tu tablero y presiona "INICIAR" para comenzar</p>
+            </section>
+
+            <!-- Tabla de puntuaciones -->
+            <section class="hall-of-fame">
+                <h2><i class="fas fa-trophy"></i>Tabla de puntuaciones</h2>
+                <div class="table-container">
+                    <table id="datos" class="score-table">
+                    <thead>
+                        <tr>
+                            <th>Jugador</th>
+                            <th>Puntos</th>
+                            <th>Tiempo</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                </div>
+            </section>
+
+        </main>
+
+
+        <!-- MODAL -->
+        <div class="modal" id="myModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-icon" id="modal-icon"></span>
+                    <h2 id="modal-title"></h2>
+                    <span class="close-btn"
+                        onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+                </div>
+
+                <div i class="modal-body">
+                    <div class="score-time">
+                        <div class="score-box">
+                            <label>PUNTUACIÓN</label>
+                            <span class="score">1008</span>
+                        </div>
+                        <div class="time-box">
+                            <label>TIEMPO</label>
+                            <span class="time">00:00:01</span>
+                        </div>
+                    </div>
+
+                    <label class="nombre-label">Ingresa tu nombre para el Hall of Fame:</label>
+                    <input type="text" id="username" placeholder="Tu nombre...">
+
+                    <div class="modal-buttons">
+                        <button id="submitBtn" disabled>GUARDAR RECORD</button>
+                        <button class="cancel"
+                            onclick="document.getElementById('myModal').style.display='none'">CANCELAR</button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
     </div>
 
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>

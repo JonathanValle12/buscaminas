@@ -5,21 +5,24 @@ class Globals {
         this.numBanderas = 0;        // => Número de banderas marcadas
         this.matrix = [];          // => Matriu con las casillas
         this.finPartida = false;     // => Marca de si se ha picado en una bomba
-        this.resultado = document.querySelector('.resultado-juego');
+        this.statusPanel = document.querySelector('.status-bar');
+        this.statusGame = document.querySelector('.game-status');
+        this.boardSection = document.querySelector('.board-section');
+        this.hallOfFame = document.querySelector('.hall-of-fame');
         this.minesVoltant = []; // => Contar minas que hay alrededor de la casilla
-        this.mines; // => Inicializar minas 
+        this.mines = 0; // => Inicializar minas 
         this.contadorBanderas = document.getElementById('num-banderas'); // => Contar las banderas colocadas
         this.contadorBanderasRestantes = document.getElementById('banderas-restantes'); // => Contar las banderas que faltan por poner
-        this.registrar = document.getElementById("registrar");
+        this.contadorTotalBanderas = document.getElementById('total-banderas'); // => Total de Banderas a colocar
         // Variables donde mostraremos el usuario y la puntuacion a guardar
         this.puntuarG = document.getElementById("punts"); // Mostrar los datos en la tabla de puntuaje
         this.punts = 0; // Incremetar +10 por cada casilla destapada
         // Variables donde añadiremos el usuario y la puntuacion en la tabla 
         this.tbody = document.querySelector("#datos tbody");
         this.taula = document.getElementById("datos");
-
+        this.esVictoria = false; // Por defecto, hasta que gane
         // Contador de Tiempo de Juego
-        this.h2 = document.getElementsByTagName("h2")[0];
+        this.timer = document.getElementById('timer');
         this.sec = 0;
         this.min = 0;
         this.hrs = 0;

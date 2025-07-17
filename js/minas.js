@@ -1,5 +1,5 @@
 import Globals from "./globals.js";
-import Game2 from "./game2.js";
+import Game2 from "./game.js";
 
 class Minas {
 
