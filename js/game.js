@@ -12,7 +12,7 @@ class Game {
             enviarDatos.addEventListener("click", () => {
                 const usuario = document.getElementById("username").value;
                 const puntuacion = Globals.punts;
-                const time = Globals.hrs + "h " + Globals.min + "m " + Globals.sec + "s";
+                const time = this.obtenerTiempoFormateado();
 
                 Score.datosGlobales(usuario, puntuacion, time);
             });
@@ -32,6 +32,7 @@ class Game {
             }
         }
     }
+
     // FUNCION PARA AGREGAR EL CONTADOR DEL TIEMPO
     add() {
         this.tick();
@@ -47,13 +48,12 @@ class Game {
             }
         }
     }
-
+    
     perderPorPuntuacion() {
         Globals.finPartida = true;
         clearInterval(Globals.t);
 
-        // Tiempo final (Formateado)
-        let time = Globals.hrs + "h " + Globals.min + "m " + Globals.sec + "s";
+        let time = this.obtenerTiempoFormateado();
         PopUps.mostrarModal(Globals.punts, time);
 
     }
@@ -65,55 +65,53 @@ class Game {
             (Globals.sec > 9 ? Globals.sec : "0" + Globals.sec);
     }
 
-    // Funcion para resetear el contador de las banderas y las que le faltan
-    // Reutilizable tanto al limpiar el tablero como al generar las bombas mortales nuevamente
     resetCount(rellenarMinas) {
         Globals.numBanderas = 0;
         Globals.contadorBanderas.textContent = 0;
         Globals.contadorBanderasRestantes.textContent = rellenarMinas;
     }
+
     resetcontador() {
         Globals.sec = 0;
         Globals.min = 0;
         Globals.hrs = 0;
         this.renderTime();
     }
+
+    // Tiempo final
+    obtenerTiempoFormateado() {
+        return `${Globals.hrs}h ${Globals.min}m ${Globals.sec}s`;
+    }
+
+    
     // Funcion para contar las minas de alrededor
     contarMinasAlrededorCasilla(fila, columna) {
+        
         let numeroMinasAlrededor = 0;
-        // Primero se crea una matriz de arras de 0
-        // Recorremos las minas que hay
+
+        // Inicialitza la matriz minesVoltant con ceros
         for (let a = 0; a < Globals.mines.length; a++) {
-            // Array donde se guardara los valores
             let fila = [];
             for (let b = 0; b < Globals.mines[0].length; b++) {
-                // Hacemos un push de 0 a la matriz fila
+
                 fila.push(0);
             }
-            // Y nuevamente hacemos otro push a la variable global minesVoltant para que lo podamos utilizar y subir las minas
-            // que hay alrededor
             Globals.minesVoltant.push(fila);
         }
-        //de la fila anterior a la posterior
-        for (let zFila = fila - 1; zFila <= fila + 1; zFila++) {
 
-            //de la columna anterior a la posterior
+        for (let zFila = fila - 1; zFila <= fila + 1; zFila++) {
             for (let zColumna = columna - 1; zColumna <= columna + 1; zColumna++) {
 
                 //si la casilla cae dentro del tablero
                 if (zFila > -1 && zFila < Globals.inputX && zColumna > -1 && zColumna < Globals.inputY) {
 
-                    //miramos si en esa posición hay una mina
                     if (Globals.mines[zFila][zColumna] == 1) {
-
-                        //y sumamos 1 al numero de minas que hay alrededor de esa casilla
                         numeroMinasAlrededor++;
                     }
                 }
             }
         }
 
-        //y guardamos cuantas minas hay en esa posicion en la variable global
         Globals.minesVoltant[fila][columna] = numeroMinasAlrededor;
     }
 
@@ -124,15 +122,18 @@ class Game {
 
         this.destapar(td);
     }
+
+
     // FUNCION PARA DESTAPAR LA CASILLA CLICKEADA
     destapar(miEvento) {
         let td = miEvento.currentTarget;
         let fila = parseInt(td.dataset.fila, 10);
         let columna = parseInt(td.dataset.columna, 10);
-        // Se llama a la funcion para destapar la casilla pasandole como entrada la fila y la columna que es la casilla clickeada
+
         this.destaparCasilla(fila, columna);
 
     }
+
     // FUNCION PARA DESTAPAR LA CASILLA DE ALREDEDOR
     destaparCasilla(fila, columna) {
         if (Globals.finPartida) return;
@@ -141,24 +142,22 @@ class Game {
         if (fila > -1 && fila < Globals.inputX &&
             columna > -1 && columna < Globals.inputY) {
 
-            //obtenermos la casilla con la fila y columna
             let td = document.querySelector("#x" + fila + "_y" + columna);
-            //si la casilla no esta destapada
+
             if (!td.classList.contains("destapado")) {
-                // Incrementamos 10 por cada casilla destapada
+
                 Globals.punts += 10;
-                Globals.puntuarG.textContent = Globals.punts; // Y actualizamos la puntuación
-                // En caso de que no haya ninguna bandera
+                Globals.puntuarG.textContent = Globals.punts;
+                
                 if (!td.classList.contains("bandera")) {
 
                     td.classList.add("destapado");
-                    //ponemos en la casilla el número de minas que tiene alrededor
+
                     let valor = Globals.minesVoltant[fila][columna];
                     td.innerHTML = valor > 0 ? valor : "";
-
-                    //ponemos el estilo del numero de minas que tiene alrededor (cada uno es de un color)
                     td.classList.add("y" + Globals.minesVoltant[fila][columna])
-                    // Si no hay minas
+
+                    // Si no hay minas en esta casilla
                     if (Globals.mines[fila][columna] !== 1) {
                         // y tiene 0 minas alrededor, destapamos las casillas contiguas
                         if (Globals.minesVoltant[fila][columna] == 0) {
@@ -173,6 +172,7 @@ class Game {
                             }
                         }
 
+                        // Verifica si se ha ganado
                         let totalCasillas = Globals.inputX * Globals.inputY;
                         let totalMinas = Globals.rellenarMinas;
                         let totalCasillasSinMinas = totalCasillas - totalMinas;
@@ -186,21 +186,21 @@ class Game {
                             let puntuacion = Globals.punts;
                             Globals.puntuarG.textContent = puntuacion;
 
-                            let time = Globals.hrs + "h " + Globals.min + "m " + Globals.sec + "s";
+                            let time = this.obtenerTiempoFormateado();
 
-                            // Llama a mostrarModal en caso de victoria
                             PopUps.mostrarModal(puntuacion, time);
                             console.log("Has ganado");
 
                         }
 
-                        // En todo caso de que haya minas
                     } else if (Globals.mines[fila][columna] == 1) {
+                    
                         td.innerText = '💣';
                         td.classList.add("destapado", "bomba");
-                        Globals.finPartida = true; // Indicamos true a la variable finPartida para terminar la partida
+                        Globals.finPartida = true;
                         Globals.esVictoria = false;
 
+                        // Revela todas las minas
                         for (let i = 0; i < Globals.inputX; i++) {
                             for (let j = 0; j < Globals.inputY; j++) {
 
@@ -218,17 +218,12 @@ class Game {
                             }
                         }
 
-                        // Creamos las variable a almacenar para pasarlo como parametro a los datosGlobales
                         Globals.t = clearInterval(Globals.t);
-                        // Restamos 10 al explotar una bomba ya que no queremos que se incremente,
-                        // unicamente las casillas a contar
+
                         let puntuacion = Globals.punts;
                         Globals.puntuarG.textContent = puntuacion;
 
-                        // Tiempo final (Formateado)
-                        let time = Globals.hrs + "h " + Globals.min + "m " + Globals.sec + "s";
-
-                        // Llama a mostrarModal en caso de derrota
+                        let time = this.obtenerTiempoFormateado();
                         PopUps.mostrarModal(puntuacion, time);
                     }
                 }
@@ -238,7 +233,7 @@ class Game {
 
     // FUNCION PARA BORRAR EL TABLERO
     del() {
-        // Reseteamos los puntos
+        // Reiniciar puntuación y tiempo
         Globals.punts = 0;
         Globals.puntuarG.textContent = Globals.punts;
         Globals.sec = 0;
@@ -246,50 +241,42 @@ class Game {
         Globals.hrs = 0;
         this.renderTime();
 
-        // Ocultar panel y mostrar estado Inicial
+        // Ocultar elementos del tablero
         Globals.statusPanel.classList.add('hidden');
         Globals.statusGame.style.display = "flex";
         Globals.boardSection.classList.add('hidden');
 
-        // Eliminar solo la tabla del tablero si existe
         let tablaExistente = document.querySelector('#tablero table');
         if (tablaExistente) {
             tablaExistente.remove();
             this.resetCount(Globals.rellenarMinas);
         }
 
-        // Detener el tiempo
         Globals.finPartida = true;
         clearInterval(Globals.t);
     }
 
-    // FUNCION PARA AÑADIR BANDERAS
+    // FUNCION para añadir o quitar una bandera en una casilla
     anadirBandera(td, rellenarMinas) {
-        // En caso de que la partida termine
         if (Globals.finPartida) return;
 
         const esMina = Globals.mines[td.dataset.fila][td.dataset.columna] === 1;
 
-        // En caso de que no este marcada
+        // Si no esta marcada y aún quedan bandeas disponibles
         if (!td.classList.contains('marcada') && Globals.numBanderas < rellenarMinas) {
             if (td.classList.length == 0) {
-                td.classList.add('bandera'); // Se añade una clase predefinida para la bandera
-                td.innerHTML = '🚩'; // Se coloca la bandera
-                td.style.backgroundColor = 'green'; // El fondo de la casilla donde se ha colocado la bandera
-                Globals.numBanderas++; // Incrementamos banderas
+                td.classList.add('bandera');
+                td.innerHTML = '🚩';
+                td.style.backgroundColor = 'green';
+                Globals.numBanderas++;
 
-                if (esMina) {
-                    Globals.punts += 5;
-                } else {
-                    Globals.punts -= 5;
-                }
+                Globals.punts += esMina ? 5 : -5;
 
-                // En caso de que haya una bandera 
             } else if (td.classList.contains('bandera')) {
-                td.classList.remove('bandera'); // Eliminamos la clase bandera
-                td.innerHTML = ''; // Quitamos la bandera
-                td.style.backgroundColor = ''; // Tambien el fondo
-                Globals.numBanderas--; // Y restamos las banderas
+                td.classList.remove('bandera');
+                td.innerHTML = '';
+                td.style.backgroundColor = '';
+                Globals.numBanderas--;
 
                 if (esMina) {
                     Globals.punts += 5;
@@ -309,69 +296,35 @@ class Game {
         Globals.contadorTotalBanderas.textContent = rellenarMinas;
     }
 
-    // FUNCION PARA OBTENER COORDENADAS DE UNA CELDA
-    coordCelda() {
-        // Obtenemos el id de mi tabla
-        let celda = document.getElementById("taula");
-        // Hacemos un evento de tipo click con una funcion callback donde le pasamos un 
-        // parametro "event" y ejecutaremos esa funcion una vez que clickemos en una celda
-        celda.addEventListener("click", function (event) {
-            // Obtenemos el id de la celda y en caso de que sea roja se cumplira la condicion
-            if (event.target.style.backgroundColor == "red") {
-                // Obtenemos el id de la celda
-                console.log("La fila y la columna tiene como posición " + event.target.id + "\n\ny es una bomba mortal");
-                // En caso de que no sea roja
-            } else {
-                console.log("La fila y la columna tiene como posición " + event.target.id + "\n\ny no es una bomba mortal");
-            }
-        });
-    }
-
-    // INICIAR PROGRAMA BUSCAMINAS
+    // INICIAR una nueva partida del Buscaminas
     inicialitza() {
 
-        // Obtener valores de los inputs
-        let inputX = document.getElementById('inputX').valueAsNumber;
-        let inputY = document.getElementById('inputY').valueAsNumber;
-        let inputMines = document.getElementById('minasC').valueAsNumber;
+        Globals.inputX = document.getElementById("inputX").valueAsNumber;
+        Globals.inputY = document.getElementById("inputY").valueAsNumber;
+        Globals.rellenarMinas = document.getElementById("minasC").valueAsNumber;
 
-        // Si alguno es 0 o no válido, salir sin hacer nada
-        if (isNaN(inputX) || inputX <= 0 || isNaN(inputY) || inputY <= 0 || isNaN(inputMines) || inputMines < 0) {
+        // Validar inputs
+        if (isNaN(Globals.inputX) || Globals.inputX <= 0 || isNaN(Globals.inputY) || Globals.inputY <= 0 || isNaN(Globals.rellenarMinas) || Globals.rellenarMinas < 0) {
             return;
         }
 
-        // Codigo normal del Juego
+        // Configurar estado iniciar del juego
         Globals.finPartida = false;
-
         Globals.statusPanel.classList.remove('hidden');
         Globals.statusGame.style.display = "none";
         Globals.boardSection.classList.remove('hidden');
 
-        clearInterval(Globals.t); // Asegúrate de limpiar siempre
+        // Iniciar temporizador
+        clearInterval(Globals.t);
         this.resetcontador();
         Globals.t = setInterval(() => this.add(), 1000);
 
-        // INICIALIZAMOS LAS MINAS y LLAMAMOS A LAS FUNCIONES YA CREADAS PARA EMPEZAR EL JUEGO
-        Globals.inputX = document.getElementById("inputX").valueAsNumber;
-        Globals.inputY = document.getElementById("inputY").valueAsNumber;
-        Globals.rellenarMinas = document.getElementById("minasC").valueAsNumber;
-        console.log("InputX ", Globals.inputX + "InputY: ", Globals.inputY + "Minas: ", Globals.rellenarMinas);
-        // Check if the obtained values are valid numbers
-        /* if (isNaN(inputX) || isNaN(inputY) || isNaN(rellenarMinas)) {
-            console.error("Invalid input values. Please enter valid numbers.");
-            return; // Exit the function if values are not valid
-        } */
-
+        // Inicializar juego
         Globals.mines = Minas.inicialitzaMines(Globals.rellenarMinas, Globals.inputX, Globals.inputY);
         Tablero.inicialitzaJoc(Globals.inputX, Globals.inputY);
-
-        //Tablero.pintarTablero(mines); // Para visualizar de una forma mejor las minas
-        this.coordCelda();
         Minas.contarMinas();
         this.actualizaNumBanderas(Globals.rellenarMinas);
 
-
-        // Cada vez que se generar nuevas minas y se crea otra tabla se resetean los puntos y se muestra por pantalla
         Globals.punts = 100;
         Globals.puntuarG.textContent = Globals.punts;
 
